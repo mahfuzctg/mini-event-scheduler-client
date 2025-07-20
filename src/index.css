@@ -1,69 +1,153 @@
 @import "tailwindcss";
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(23, 21, 21, 0.87);
-  background-color: #b2b2b2;
-
+  font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  line-height: 1.6;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* UI Theme */
+  --primary: #6366f1; /* indigo-500 */
+  --primary-dark: #4338ca;
+  --accent: #16a34a; /* green-600 */
+  --bg-light: #f9fafb;
+  --text-dark: #1f2937; /* gray-800 */
+  --text-muted: #6b7280;
+  --card-gradient: linear-gradient(to right, #e0f7fa, #f0fdf4);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.05);
+  --radius: 1rem;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* Global reset & layout */
 body {
   margin: 0;
+  padding: 0;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
 }
 
+#root {
+  max-width: 1280px;
+  width: 100%;
+  padding: 2rem 1rem;
+  margin: 0 auto;
+  text-align: center;
+  background: linear-gradient(to right top, #f9fafb, #e5f4ff);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+/* Headings */
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
+h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Links */
+a {
+  color: var(--primary);
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* Buttons */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.6rem;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: background-color 0.2s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+button:hover {
+  background-color: var(--primary-dark);
+}
+
+button:focus {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Cards / List Items */
+.card,
+.event-item {
+  background: var(--card-gradient);
+  border: 1px solid #d1fae5;
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-md);
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover,
+.event-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Icon Buttons */
+.icon-btn {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.icon-btn:hover {
+  color: var(--primary);
+}
+
+/* Utility */
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.gradient-heading {
+  background: linear-gradient(to right, #4ade80, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  h2 {
+    font-size: 1.25rem;
   }
 }
