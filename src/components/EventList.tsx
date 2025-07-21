@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import type { Event } from "../types/event";
-import { formatDate, formatTime, isPast } from "../utils/dateUtils";
+import { formatDate, formatTime, isPast } from "../utils/DateUtils";
 
 interface EventListProps {
   events: Event[];
