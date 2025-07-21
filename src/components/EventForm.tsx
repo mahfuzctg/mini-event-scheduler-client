@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import type { EventType } from "../types/event";
+import React, { useState } from "react";
+import type { NewEventInput } from "../types/event";
 
 interface Props {
-  onAddEvent: (newEvent: EventType) => void;
+  onSubmit: (newEvent: NewEventInput) => void;
 }
 
-const EventForm: React.FC<Props> = ({ onAddEvent }) => {
+const EventForm: React.FC<Props> = ({ onSubmit }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -14,53 +14,27 @@ const EventForm: React.FC<Props> = ({ onAddEvent }) => {
     "Other"
   );
 
-  useEffect(() => {
-    // Simulate fetching from backend
-    const fetchCategory = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/category`);
-        const data = await res.json();
-        setCategory(data.category);
-      } catch {
-        setCategory("Other");
-      }
-    };
-    fetchCategory();
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !date || !time) {
       alert("Please fill in all required fields.");
       return;
     }
 
-    const newEvent: EventType = {
-      id: crypto.randomUUID(),
+    const newEvent: NewEventInput = {
       title,
       date,
       time,
       notes,
       category,
-      isArchived: false,
     };
 
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newEvent),
-      });
-      if (!res.ok) throw new Error();
+    onSubmit(newEvent);
 
-      onAddEvent(newEvent);
-      setTitle("");
-      setDate("");
-      setTime("");
-      setNotes("");
-    } catch {
-      alert("Failed to create event. Please try again.");
-    }
+    setTitle("");
+    setDate("");
+    setTime("");
+    setNotes("");
   };
 
   return (
@@ -97,12 +71,20 @@ const EventForm: React.FC<Props> = ({ onAddEvent }) => {
         onChange={(e) => setNotes(e.target.value)}
         className="w-full border p-2 rounded"
       ></textarea>
-      <div className="text-sm text-gray-600">
-        Category: <span className="font-semibold">{category}</span>
-      </div>
+      <select
+        value={category}
+        onChange={(e) =>
+          setCategory(e.target.value as "Work" | "Personal" | "Other")
+        }
+        className="w-full border p-2 rounded"
+      >
+        <option value="Work">Work</option>
+        <option value="Personal">Personal</option>
+        <option value="Other">Other</option>
+      </select>
       <button
         type="submit"
-        className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded hover:opacity-90"
+        className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
       >
         Submit
       </button>
