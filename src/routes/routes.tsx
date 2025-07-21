@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-
 import EventScheduler from "../components/EventScheduler";
 
 const router = createBrowserRouter([

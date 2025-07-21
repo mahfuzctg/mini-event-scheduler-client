@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import { isValid, parseISO } from "date-fns";
-import { eventApi } from "../services/api";
+
 import type { CreateEventData, Event } from "../types/event";
 
+import { eventApi } from "../api/Event.Api";
 import EventForm from "./EventForm";
 import EventList from "./EventList";
 
