@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NewEventInput } from "../types/event";
 
 interface Props {
   onSubmit: (newEvent: NewEventInput) => void;
+  fetchCategory?: () => Promise<"Work" | "Personal" | "Other">;
 }
 
-const EventForm: React.FC<Props> = ({ onSubmit }) => {
+const EventForm: React.FC<Props> = ({ onSubmit, fetchCategory }) => {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -13,6 +14,12 @@ const EventForm: React.FC<Props> = ({ onSubmit }) => {
   const [category, setCategory] = useState<"Work" | "Personal" | "Other">(
     "Other"
   );
+
+  useEffect(() => {
+    if (fetchCategory) {
+      fetchCategory().then((cat) => setCategory(cat));
+    }
+  }, [fetchCategory]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +50,7 @@ const EventForm: React.FC<Props> = ({ onSubmit }) => {
       className="bg-white p-6 shadow-lg rounded-md space-y-4 w-full max-w-xl mx-auto"
     >
       <h2 className="text-xl font-bold text-gray-800">Add New Event</h2>
+
       <input
         type="text"
         placeholder="Title *"
@@ -51,6 +59,7 @@ const EventForm: React.FC<Props> = ({ onSubmit }) => {
         className="w-full border p-2 rounded"
         required
       />
+
       <input
         type="date"
         value={date}
@@ -58,6 +67,7 @@ const EventForm: React.FC<Props> = ({ onSubmit }) => {
         className="w-full border p-2 rounded"
         required
       />
+
       <input
         type="time"
         value={time}
@@ -65,23 +75,19 @@ const EventForm: React.FC<Props> = ({ onSubmit }) => {
         className="w-full border p-2 rounded"
         required
       />
+
       <textarea
         placeholder="Notes (optional)"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         className="w-full border p-2 rounded"
       ></textarea>
-      <select
-        value={category}
-        onChange={(e) =>
-          setCategory(e.target.value as "Work" | "Personal" | "Other")
-        }
-        className="w-full border p-2 rounded"
-      >
-        <option value="Work">Work</option>
-        <option value="Personal">Personal</option>
-        <option value="Other">Other</option>
-      </select>
+
+      {/* Display-only category */}
+      <div className="w-full border p-2 rounded bg-gray-100 text-gray-700">
+        <strong>Category:</strong> {category}
+      </div>
+
       <button
         type="submit"
         className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
