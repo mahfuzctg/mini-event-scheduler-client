@@ -1,111 +1,112 @@
-import { Calendar, ClipboardList, Clock, MapPin } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { EventType } from "../types/event";
 
-const EventForm = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    date: "",
-    time: "",
-    location: "",
-    description: "",
-  });
+interface Props {
+  onAddEvent: (newEvent: EventType) => void;
+}
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const EventForm: React.FC<Props> = ({ onAddEvent }) => {
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [notes, setNotes] = useState("");
+  const [category, setCategory] = useState<"Work" | "Personal" | "Other">(
+    "Other"
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    // Simulate fetching from backend
+    const fetchCategory = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/category`);
+        const data = await res.json();
+        setCategory(data.category);
+      } catch {
+        setCategory("Other");
+      }
+    };
+    fetchCategory();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitted Data:", formData);
-    // You can integrate this with API here
+    if (!title || !date || !time) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const newEvent: EventType = {
+      id: crypto.randomUUID(),
+      title,
+      date,
+      time,
+      notes,
+      category,
+      isArchived: false,
+    };
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newEvent),
+      });
+      if (!res.ok) throw new Error();
+
+      onAddEvent(newEvent);
+      setTitle("");
+      setDate("");
+      setTime("");
+      setNotes("");
+    } catch {
+      alert("Failed to create event. Please try again.");
+    }
   };
 
   return (
-    <div className="max-w-2xl mx-auto mt-10 bg-gradient-to-br from-white via-gray-100 to-gray-200 p-8 rounded-xl shadow-lg">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
-        Create New Event
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Title */}
-        <div className="flex items-center border-b border-gray-300 focus-within:border-green-600">
-          <ClipboardList className="text-gray-500 mr-3" />
-          <input
-            type="text"
-            name="title"
-            placeholder="Event Title"
-            className="w-full bg-transparent py-2 outline-none"
-            value={formData.title}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Date */}
-        <div className="flex items-center border-b border-gray-300 focus-within:border-green-600">
-          <Calendar className="text-gray-500 mr-3" />
-          <input
-            type="date"
-            name="date"
-            className="w-full bg-transparent py-2 outline-none"
-            value={formData.date}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Time */}
-        <div className="flex items-center border-b border-gray-300 focus-within:border-green-600">
-          <Clock className="text-gray-500 mr-3" />
-          <input
-            type="time"
-            name="time"
-            className="w-full bg-transparent py-2 outline-none"
-            value={formData.time}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Location */}
-        <div className="flex items-center border-b border-gray-300 focus-within:border-green-600">
-          <MapPin className="text-gray-500 mr-3" />
-          <input
-            type="text"
-            name="location"
-            placeholder="Event Location"
-            className="w-full bg-transparent py-2 outline-none"
-            value={formData.location}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        {/* Description */}
-        <div className="border border-gray-300 rounded-md focus-within:border-green-600">
-          <textarea
-            name="description"
-            placeholder="Event Description..."
-            rows={4}
-            className="w-full bg-transparent p-2 outline-none resize-none"
-            value={formData.description}
-            onChange={handleChange}
-          ></textarea>
-        </div>
-
-        {/* Submit Button */}
-        <div className="text-center">
-          <button
-            type="submit"
-            className="px-6 py-2 rounded-lg bg-gradient-to-r from-green-500 to-green-700 text-white hover:from-green-600 hover:to-green-800 transition"
-          >
-            Submit Event
-          </button>
-        </div>
-      </form>
-    </div>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 shadow-lg rounded-md space-y-4 w-full max-w-xl mx-auto"
+    >
+      <h2 className="text-xl font-bold text-gray-800">Add New Event</h2>
+      <input
+        type="text"
+        placeholder="Title *"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="w-full border p-2 rounded"
+        required
+      />
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        className="w-full border p-2 rounded"
+        required
+      />
+      <input
+        type="time"
+        value={time}
+        onChange={(e) => setTime(e.target.value)}
+        className="w-full border p-2 rounded"
+        required
+      />
+      <textarea
+        placeholder="Notes (optional)"
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        className="w-full border p-2 rounded"
+      ></textarea>
+      <div className="text-sm text-gray-600">
+        Category: <span className="font-semibold">{category}</span>
+      </div>
+      <button
+        type="submit"
+        className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded hover:opacity-90"
+      >
+        Submit
+      </button>
+    </form>
   );
 };
 

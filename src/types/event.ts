@@ -5,5 +5,7 @@ export interface Event {
   time: string;
   notes?: string;
   category: "Work" | "Personal" | "Other";
-  archived: boolean;
+  isArchived: boolean;
 }
+
+export type NewEventInput = Omit<Event, "id" | "isArchived">;
