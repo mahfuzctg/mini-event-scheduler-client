@@ -1,3 +1,4 @@
+// App.tsx
 import { RouterProvider } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import router from "./routes/routes";

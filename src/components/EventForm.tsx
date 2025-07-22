@@ -57,21 +57,13 @@ const EventForm: React.FC<EventFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
     try {
       await onSubmit(formData);
-      // Reset form after successful submission (only if not editing)
       if (!isEditing) {
-        setFormData({
-          title: "",
-          date: "",
-          time: "",
-          notes: "",
-        });
+        setFormData({ title: "", date: "", time: "", notes: "" });
         setErrors({});
       }
     } catch (error) {
@@ -105,7 +97,7 @@ const EventForm: React.FC<EventFormProps> = ({
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
+
     if (errors[name as keyof CreateEventData]) {
       setErrors((prev) => ({
         ...prev,
@@ -116,7 +108,7 @@ const EventForm: React.FC<EventFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Title Field */}
+      {/* Title */}
       <div>
         <label
           htmlFor="title"
@@ -125,23 +117,23 @@ const EventForm: React.FC<EventFormProps> = ({
           Title <span className="text-red-500">*</span>
         </label>
         <input
-          type="text"
           id="title"
           name="title"
+          type="text"
           value={formData.title}
           onChange={handleInputChange}
+          maxLength={100}
+          placeholder="Enter event title"
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
             errors.title ? "border-red-300" : "border-gray-300"
           }`}
-          placeholder="Enter event title"
-          maxLength={100}
         />
         {errors.title && (
           <p className="mt-1 text-sm text-red-600">{errors.title}</p>
         )}
       </div>
 
-      {/* Date Field */}
+      {/* Date */}
       <div>
         <label
           htmlFor="date"
@@ -150,9 +142,9 @@ const EventForm: React.FC<EventFormProps> = ({
           Date <span className="text-red-500">*</span>
         </label>
         <input
-          type="date"
           id="date"
           name="date"
+          type="date"
           value={formData.date}
           onChange={handleInputChange}
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -164,7 +156,7 @@ const EventForm: React.FC<EventFormProps> = ({
         )}
       </div>
 
-      {/* Time Field */}
+      {/* Time */}
       <div>
         <label
           htmlFor="time"
@@ -173,9 +165,9 @@ const EventForm: React.FC<EventFormProps> = ({
           Time <span className="text-red-500">*</span>
         </label>
         <input
-          type="time"
           id="time"
           name="time"
+          type="time"
           value={formData.time}
           onChange={handleInputChange}
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -187,7 +179,7 @@ const EventForm: React.FC<EventFormProps> = ({
         )}
       </div>
 
-      {/* Notes Field */}
+      {/* Notes */}
       <div>
         <label
           htmlFor="notes"
@@ -198,14 +190,14 @@ const EventForm: React.FC<EventFormProps> = ({
         <textarea
           id="notes"
           name="notes"
+          rows={3}
+          maxLength={500}
           value={formData.notes}
           onChange={handleInputChange}
-          rows={3}
+          placeholder="Add any additional notes..."
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
             errors.notes ? "border-red-300" : "border-gray-300"
           }`}
-          placeholder="Add any additional notes..."
-          maxLength={500}
         />
         {errors.notes && (
           <p className="mt-1 text-sm text-red-600">{errors.notes}</p>
@@ -215,7 +207,7 @@ const EventForm: React.FC<EventFormProps> = ({
         </p>
       </div>
 
-      {/* Category Display */}
+      {/* Category (Display Only) */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Category
@@ -225,12 +217,16 @@ const EventForm: React.FC<EventFormProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {/* Buttons */}
       <div className="flex space-x-2">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+          className="flex-1 bg-[#5B4DFB] text-white py-2 px-4 rounded-md 
+      hover:bg-[#3a2d8a] 
+      focus:outline-none focus:ring-2 focus:ring-[#4b3aaf] focus:ring-offset-2 
+      disabled:opacity-50 disabled:cursor-not-allowed 
+      transition-colors duration-300 ease-in-out"
         >
           {isSubmitting ? (
             <div className="flex items-center justify-center">

@@ -6,9 +6,9 @@ import {
   isTomorrow,
   isValid,
   isYesterday,
-  parseISO,
   startOfDay,
 } from "date-fns";
+import { parseISO } from "date-fns/parseISO";
 
 /**
  * Format a date string to a readable format

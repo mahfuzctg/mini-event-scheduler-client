@@ -1,9 +1,11 @@
 import type { CreateEventData, Event, UpdateEventData } from "../types/event";
 
 // const API_BASE_URL = "http://localhost:5000/api/v1";
-const API_BASE_URL = "https://mini-event-with-ai.vercel.app/api/v1";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://mini-event-scheduler-server-iota.vercel.app/api/v1";
 
-export const eventApi = {
+export const EventApi = {
   // Get all events
   /**
    * Fetch all events from the API with support for search, sorting, and pagination.
